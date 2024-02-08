@@ -1,5 +1,6 @@
-﻿@using Microsoft.AspNetCore.Components.Web
-@namespace BlazorApp1.Pages
+﻿@page "/"
+@using Microsoft.AspNetCore.Components.Web
+@namespace BlazorMultiSelect.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 <!DOCTYPE html>
@@ -10,11 +11,12 @@
     <base href="~/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
-    <link href="BlazorApp1.styles.css" rel="stylesheet" />
+    <link href="BlazorApp2.styles.css" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="favicon.png"/>
     <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
 <body>
-    @RenderBody()
+    <component type="typeof(App)" render-mode="ServerPrerendered" />
 
     <div id="blazor-error-ui">
         <environment include="Staging,Production">
@@ -28,5 +30,12 @@
     </div>
 
     <script src="_framework/blazor.server.js"></script>
+    <script>
+        function getSelectedOptions(selectElementId) {
+            const select = document.getElementById(selectElementId);
+            const selectedValues = Array.from(select.selectedOptions).map(option => parseInt(option.value));
+            return selectedValues;
+        }
+    </script>
 </body>
 </html>
