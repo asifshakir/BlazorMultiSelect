@@ -1,0 +1,55 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Components.Web
+@using System.Collections.ObjectModel
+@using System.Text.Json
+@using Microsoft.JSInterop
+@inject ILogger<Index> Logger
+@inject IJSRuntime JSRuntime
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<select id="teamMembers" @onchange='() => OptionClickEvent("teamMembers")' class="form-select" multiple>
+    @foreach (var teamMember in teamMembers)
+    {
+        <option value="@teamMember.Id">@teamMember.Name</option>
+    }
+</select>
+
+<pre>
+Selected Team Members: @JsonSerializer.Serialize(selectedTeamMembers)
+</pre>
+
+
+@code {
+    private ObservableCollection<int> selectedTeamMembers = new();
+
+    private List<ItemModel> teamMembers = new List<ItemModel>()
+   {
+      new(){ Id = 1, Name="Ali" },
+      new(){ Id = 2, Name="Komel" },
+      new(){ Id = 3, Name="Sagar"},
+      new(){ Id = 4, Name="Uttam" },
+   };
+
+    public async Task OptionClickEvent(string elementId)
+    {
+        var selectedIds = await JSRuntime.InvokeAsync<List<int>>("getSelectedOptions", elementId);
+        selectedTeamMembers.Clear();
+        foreach (var id in selectedIds)
+        {
+            if (!selectedTeamMembers.Contains(id))
+            {
+                selectedTeamMembers.Add(id);
+            }
+        }
+    }
+
+    public class ItemModel
+    {
+        public string Name { get; set; } = string.Empty;
+        public int Id { get; set; }
+    }
+
+}
